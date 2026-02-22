@@ -1,9 +1,9 @@
 import { createAccount } from "../ui/systemInterface.js";
 
-const menuControl = (answerUser) => {
+const menuControl = async (answerUser) => {
   switch (answerUser) {
     case "Create account":
-      createAccount();
+      await createAccount();
       break;
     case "Check balance":
       break;

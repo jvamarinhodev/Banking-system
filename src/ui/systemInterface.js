@@ -1,13 +1,17 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
 //control
-import menuControl from "../controllers/anserUser.js";
+import menuControl from "../controllers/answer.js";
 //Services
 import buildAccount from "../services/createAccount.js";
 //system interface
 export const systemInterface = async () => {
+  let logOut = false;
+
   try {
-    const answerUser = await inquirer.prompt([
+    while (!logOut){
+
+      const answerUser = await inquirer.prompt([
       {
         type: "list",
         name: "action",
@@ -21,38 +25,55 @@ export const systemInterface = async () => {
         ],
       },
     ]);
-    menuControl(answerUser.action);
+
+    if(answerUser.action === 'Log Out'){
+      logOut = true
+      break;
+    }
+
+    await menuControl(answerUser.action);
+  }
+    
   } catch (err) {
     console.log(err);
   }
 };
 //welcome message account creation
-export const createAccount = () => {
+export const createAccount = async () => {
   console.log(chalk.bgGreen.black("Congratulation on choosing our bank."));
   console.log(chalk.green("Please set your account option below."));
-  requestNameAccount();
+  await requestNameAccount();
 };
 
 //request for user name entry
 export const requestNameAccount = async () => {
+ while(true){
   try {
-    const anserUser = await inquirer.prompt([
+    const answerUser = await inquirer.prompt([
       {
         name: "accountName",
         message: "Enter a name for your account: ",
+        validate(value) {
+          if(!value.trim()) return "Account name cannot be empty";
+          return true
+        }
       },
     ]);
 
-    const accountName = anserUser.accountName
-    buildAccount(accountName)
+    const accountName = answerUser.accountName
+
+    await buildAccount(accountName)
+
+    successMessage(accountName)
+    break;
   } catch (err) {
-    console.log(err);
+    console.log(chalk.bgRed(err.message));
   }
+ } 
+  
 };
 
 //success when creating account
 export const successMessage = (accountName) => {
-  if(requestNameAccount() === true){
-    console.log(`Congratulation Mr(s) ${accountName}, you account has bee created`)
-  }
+    console.log(chalk.green(`Congratulation Mr(s) ${accountName}, you account has bee created`))
 }

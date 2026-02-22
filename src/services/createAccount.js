@@ -1,27 +1,33 @@
-import fs from "fs";
-import errorMessages from "../ui/errorMessages.js";
+import fs from 'fs/promises';
+import path from 'path';
+//absolute path
+const accountPath = path.resolve('src', 'repositories');
+//throws invalid name error 
+export default async function buildAccount(accountName) {
+  if(!accountName || !accountName.trim()){
+    throw new Error('Account name cannot be empty');
+  };
 
-const accountPath = `./src/repositories`;
+  const safeName = accountName.replace(/[<>:"/\\|?*]/g, '')
 
-const buildAccount = (accountName) => {
+  await fs.mkdir(accountPath, {recursive: true})//creates and validates if it exists
 
-  //validate path
-  if (!fs.existsSync(accountPath)) {
-    fs.mkdirSync(accountPath);
-  }
-  //validate account 
-  if(fs.existsSync(`${accountPath}/${accountName}.json`)){
-    return errorMessages()
-  }
+  const filePath = path.join(accountPath, `${safeName}.json`);
 
-  let data = {
-    name: accountName,
-    balance: 0
-  }
-  
-  fs.writeFileSync(`${accountPath}/${accountName}.json`, JSON.stringify(data, null, 2) )
+  try {
+    await fs.access(filePath);
+    throw new Error('Account already exists');
+  } catch (err) {
 
+    if(err.code !== 'ENOENT'){
+      throw err;
+    }
+
+    const data = {
+      name: accountName,
+      balance: 0,
+    };
+    await fs.writeFile(filePath, JSON.stringify(data, null, 2));
   return true
+  }
 };
-
-export default buildAccount;
