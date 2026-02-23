@@ -1,4 +1,4 @@
-import { createAccount } from "../ui/systemInterface.js";
+import { createAccount } from "../ui/createAccount.ui.js";
 
 const menuControl = async (answerUser) => {
   switch (answerUser) {

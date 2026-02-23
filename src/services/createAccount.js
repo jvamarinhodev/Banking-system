@@ -8,14 +8,14 @@ export default async function buildAccount(accountName) {
     throw new Error('Account name cannot be empty');
   };
 
-  const safeName = accountName.replace(/[<>:"/\\|?*]/g, '')
+  const safeName = accountName.replace(/[<>:"/\\|?*]/g, '') // valid characters 
 
   await fs.mkdir(accountPath, {recursive: true})//creates and validates if it exists
 
   const filePath = path.join(accountPath, `${safeName}.json`);
 
   try {
-    await fs.access(filePath);
+    await fs.access(filePath); // If it exists, it doesn't throw an error, if it exists, it throws an error.
     throw new Error('Account already exists');
   } catch (err) {
 
