@@ -100,9 +100,9 @@ O objetivo é garantir previsibilidade no fluxo e evitar falhas não tratadas.
 ## ▶️ Como Executar
 
 ```bash
-git clone <repo-url>
+git clone <https://github.com/jvamarinhodev/Banking-system>
 npm install
-node src/index.js
+node src/app.js
 ```
 
 ---
@@ -119,4 +119,4 @@ node src/index.js
 ## 👨‍💻 Autor
 
 João Vitor Amarinho de Oliveira
-Backend Developer em for
+Backend Developer em formação
